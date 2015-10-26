@@ -1,0 +1,5 @@
+#! bash
+
+export PERFECT_DEMO_ROOT="$(cd -P $(dirname $BASH_SOURCE); pwd)"
+export PATH="$PERFECT_DEMO_ROOT/bin:$PATH"
+export MANPATH="$PERFECT_DEMO_ROOT/man:$MANPATH"

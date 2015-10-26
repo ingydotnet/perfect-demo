@@ -1,0 +1,30 @@
+perfect-demo
+============
+
+Fully Scripted Terminal Screencasts
+
+= Synopsis
+
+  # Install `perfect-demo`:
+  git clone https://github.com/ingydotnet/perfect-demo
+  source perfect-demo/.rc
+
+  # Read the manpage:
+  man perfect-demo
+
+  # Run a perfect demo:
+  perfect-demo $PERFECT_DEMO_ROOT/share/git-hub.pd
+
+= Description
+
+The `perfect-demo` command lets you create and run screencastable,
+terminal-based demos, with voice annotation... all from a simple text file.
+
+= How to Make a Perfect Demo
+
+...doc coming soon...
+
+= Status
+
+This is a very early release. Demos in the `share` directory only work in OSX
+because they need the `say` text-to-voice command.

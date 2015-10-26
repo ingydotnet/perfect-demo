@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+
+set -e
+
+main() {
+  if [[ $# -eq 1 ]]; then
+    cat "$1" | run
+  else
+    run
+  fi
+}
+
+run() {
+  local started=false message= say_pid=
+
+  while IFS= read -r line; do
+    if [[ $line =~ ^$ ]]; then
+      continue
+    elif [[ $line =~ ^\\\  ]]; then
+      line="${line#\\\ }"
+      eval "$line"
+      continue
+    elif [[ $line =~ ^\$\  ]]; then
+      line="${line#\$\ }"
+      type-and-run "$line"
+    elif [[ $line =~ ^#\  ]]; then
+      line="${line#\#\ }"
+      message+="$line"
+    elif [[ $line =~ ^\$#\  ]]; then
+      line="${line#\$\#\ }"
+      message="$line"
+      type-and-run "# $line"
+    else
+      echo "Invalid demo command line: '$line'"
+      exit 1;
+    fi
+  done
+
+  _wait
+  echo
+}
+
+type-and-run() {
+  line="$1"
+  _pause-at-intro
+  if [[ -n $message ]]; then
+    _say "$message"
+    message=
+  fi
+  for (( i = 0; i < ${#line}; i++ )); do
+    c="${line:$i:1}"
+    printf "$c"
+    if [[ $c == ' ' ]]; then
+      sleep 0.15
+    else
+      sleep 0.05
+    fi
+  done
+
+  sleep 0.25
+  echo
+  eval "$line"
+  _prompt
+}
+
+_say() {
+  _pause-at-intro
+  say "$1" &
+  say_pid=$!
+}
+
+_pause-at-intro() {
+  if ! $started; then
+    clear
+    _prompt
+    _wait
+    started=true
+  fi
+}
+
+_prompt() {
+  printf "${PERFECT_DEMO_PROMPT:-Perfect Demo > }"
+  if [[ -n $say_pid ]]; then
+    wait $say_pid
+    _wait
+  fi
+}
+
+_wait() {
+  sleep "${1:-${PERFECT_DEMO_WAIT:-3}}"
+}
+
+_pause() {
+  sleep "${1:-${PERFECT_DEMO_PAUSE:-1}}"
+}
+
+c() {
+  clear
+  _prompt
+}
+
+[[ $0 != $BASH_SOURCE ]] || main "$@"
+
+# vim: set ft=sh lisp:

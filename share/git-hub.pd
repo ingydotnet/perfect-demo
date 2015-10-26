@@ -1,0 +1,26 @@
+\ PERFECT_DEMO_PROMPT='git-hub demo > '
+\ PERFECT_DEMO_WAIT=1
+\ PERFECT_DEMO_PAUSE=1
+
+$# Welcome to the Perfect Demo for the 'git hub' command:
+
+# The 'git hub help' command gives you a help system overview.
+$ git hub help
+\ c
+
+# The 'git hub user' command shows you information about a GitHub
+# user.  In this case, no user name was specified, so it defaults
+# to the configured user. ie Your user name. ie Mine!
+$ git hub user
+\ c
+
+# The 'git hub reepos' command shows all of a user's reepos. In
+# this case we ask to see just the latest 10.
+$ git hub repos --count=10
+\ c
+
+# Finally, this command shows the information for a specific repo.
+$ git hub repo ingydotnet/git-hub
+\ c
+
+$# THE END
