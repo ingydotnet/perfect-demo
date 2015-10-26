@@ -1,7 +1,9 @@
+\ [[ -n $PERFECT_DEMO_ROOT ]] || die 'PERFECT_DEMO_ROOT not defined'
+\ [[ $(uname) == Darwin ]] || die 'This demo only works in OSX'
+
 \ PERFECT_DEMO_PROMPT="Perfect Demo for 'ls' > "
 \ PERFECT_DEMO_WAIT=1
 \ PERFECT_DEMO_PAUSE=1
-\ [[ -n $PERFECT_DEMO_ROOT ]] || { echo 'PERFECT_DEMO_ROOT not defined'; exit 1; }
 
 $# Welcome to the Perfect Demo for the 'ls' command:
 
