@@ -13,7 +13,7 @@ Fully Scripted Terminal Screencasts
   man perfect-demo
 
   # Run a perfect demo:
-  perfect-demo $PERFECT_DEMO_ROOT/share/git-hub.pd
+  perfect-demo $PERFECT_DEMO_ROOT/share/ls-demo.pd
 
 = Description
 
