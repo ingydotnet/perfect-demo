@@ -1,0 +1,8 @@
+- https://www.youtube.com/watch?v=jJT80qqqIyQ
+  - Using SoundFlower to capture local sound with quicktime
+- https://gist.github.com/dergachev/4627207
+  - `ffmpeg -i demo.mov -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3 > demo.gif`
+- With imagemagick:
+  - `ffmpeg -i demo.mov -vf scale=800:-1 -r 10 -f image2pipe -vcodec ppm - | convert -delay 5 -layers Optimize -loop 0 - demo.gif`
+- Preview animated gif
+  - `qlmanage -p demo.gif`
