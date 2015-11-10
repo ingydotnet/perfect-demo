@@ -15,6 +15,7 @@ run() {
 
   while IFS= read -r line; do
     if [[ $line =~ ^$ ]]; then
+      _say
       continue
     elif [[ $line =~ ^\\\  ]]; then
       line="${line#\\\ }"
@@ -43,10 +44,7 @@ run() {
 type-and-run() {
   line="$1"
   _pause-at-intro
-  if [[ -n $message ]]; then
-    _say "$message"
-    message=
-  fi
+  _say
   for (( i = 0; i < ${#line}; i++ )); do
     c="${line:$i:1}"
     printf "$c"
@@ -65,8 +63,16 @@ type-and-run() {
 
 _say() {
   _pause-at-intro
-  say "$1" &
-  say_pid=$!
+  if [[ -n $message ]]; then
+    if [[ -n $say_pid ]]; then
+      wait $say_pid
+      say_pid=
+      _pause
+    fi
+    say "$message" &
+    say_pid=$!
+    message=
+  fi
 }
 
 _pause-at-intro() {
@@ -82,7 +88,8 @@ _prompt() {
   printf "${PERFECT_DEMO_PROMPT:-Perfect Demo > }"
   if [[ -n $say_pid ]]; then
     wait $say_pid
-    _wait
+    say_pid=
+    _pause
   fi
 }
 
