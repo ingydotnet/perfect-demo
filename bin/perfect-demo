@@ -42,6 +42,9 @@ run() {
 }
 
 type-and-run() {
+  local rate="${PERFECT_DEMO_RATE:-200}"
+  sleep_type=$(bc <<<"scale = 5; 8 / $rate")
+  sleep_space=$(bc <<<"scale = 5; $sleep_type * 2")
   line="$1"
   _pause-at-intro
   _say
@@ -49,9 +52,9 @@ type-and-run() {
     c="${line:$i:1}"
     printf "$c"
     if [[ $c == ' ' ]]; then
-      sleep 0.15
+      sleep $sleep_space
     else
-      sleep 0.05
+      sleep $sleep_type
     fi
   done
 
@@ -62,6 +65,8 @@ type-and-run() {
 }
 
 _say() {
+  local voice="${PERFECT_DEMO_VOICE:-Daniel}"
+  local rate="${PERFECT_DEMO_RATE:-200}"
   _pause-at-intro
   if [[ -n $message ]]; then
     if [[ -n $say_pid ]]; then
@@ -69,7 +74,7 @@ _say() {
       say_pid=
       _pause
     fi
-    say "$message" &
+    say -r "$rate" -v "$voice" "$message" &
     say_pid=$!
     message=
   fi
