@@ -11,34 +11,74 @@ main() {
 }
 
 run() {
-  local started=false message= say_pid=
+  local started=false say_pid=
+  local bash=() command=() message=() prev=
 
   while IFS= read -r line; do
     if [[ $line =~ ^$ ]]; then
-      _say
-      continue
+      all-and-run
     elif [[ $line =~ ^\\\  ]]; then
-      line="${line#\\\ }"
-      eval "$line"
-      continue
+      bash+=("${line#\\\ }")
+      all-and-run bash
     elif [[ $line =~ ^\$\  ]]; then
-      line="${line#\$\ }"
-      type-and-run "$line"
+      command+=("${line#\$\ }")
+      all-and-run command
     elif [[ $line =~ ^#\  ]]; then
-      line="${line#\#\ }"
-      message+="$line"
+      message+=("${line#\#\ }")
+      all-and-run message
     elif [[ $line =~ ^\$#\  ]]; then
       line="${line#\$\#\ }"
-      message="$line"
-      type-and-run "# $line"
+      command+=("# $line")
+      message+=("$line")
+      all-and-run command-message
     else
       echo "Invalid demo command line: '$line'"
       exit 1;
     fi
   done
+  all-and-run
 
   _wait
   echo
+}
+
+all-and-run() {
+  local action="$1"
+  if [[ -z $prev ]]; then
+    prev="$action"
+    return
+  fi
+  if [[ $action == $prev ]]; then
+    return
+  fi
+  if [[ $prev == bash ]]; then
+    for b in "${bash[@]}"; do
+      eval "$b"
+    done
+    bash=()
+  elif [[ $prev == command ]]; then
+    for c in "${command[@]}"; do
+      type-and-run "$c"
+    done
+    command=()
+    _pause
+  elif [[ $prev == message ]]; then
+    for m in "${message[@]}"; do
+      _say "$m"
+    done
+    message=()
+    _pause
+  elif [[ $prev == command-message ]]; then
+    m="${message[@]}"
+    _say "$m"
+    message=()
+    for c in "${command[@]}"; do
+      type-and-run "$c"
+    done
+    command=()
+    _pause
+  fi
+  prev="$action"
 }
 
 type-and-run() {
@@ -47,7 +87,6 @@ type-and-run() {
   sleep_space=$(bc <<<"scale = 5; $sleep_type * 2")
   line="$1"
   _pause-at-intro
-  _say
   for (( i = 0; i < ${#line}; i++ )); do
     c="${line:$i:1}"
     printf "$c"
@@ -67,12 +106,12 @@ type-and-run() {
 _say() {
   local voice="${PERFECT_DEMO_VOICE:-Daniel}"
   local rate="${PERFECT_DEMO_RATE:-200}"
+  local message="$1"
   _pause-at-intro
   if [[ -n $message ]]; then
     if [[ -n $say_pid ]]; then
       wait $say_pid
       say_pid=
-      _pause
     fi
     say -r "$rate" -v "$voice" "$message" &
     say_pid=$!

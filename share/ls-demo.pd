@@ -5,7 +5,9 @@
 \ PERFECT_DEMO_WAIT=1
 \ PERFECT_DEMO_PAUSE=1
 
-$# Welcome to the Perfect Demo for the 'ls' command:
+$# Welcome to the Perfect Demo
+$# for the 'ls' command:
+\ c
 
 # First let's cd to the perfect-demo repo directory.
 $ cd $PERFECT_DEMO_ROOT
