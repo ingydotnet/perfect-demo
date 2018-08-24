@@ -155,6 +155,10 @@ die() {
   exit 1
 }
 
+if ! `type say &>/dev/null`; then
+  say() { :; }
+fi
+
 [[ $0 != $BASH_SOURCE ]] || main "$@"
 
 # vim: set ft=sh lisp:

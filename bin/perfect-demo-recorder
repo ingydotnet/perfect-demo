@@ -1,0 +1,55 @@
+#!/bin/bash
+
+if [[ $OS != linux ]]; then
+  echo "perfect-demo-recorder only works on Linux for now" >&2
+  exit 1
+fi
+
+if ! $(type byzanz-record &>/dev/null); then
+  echo "You need to install the 'byzanz' software"
+  exit 1
+fi
+
+if ! $(type xwininfo &>/dev/null); then
+  echo "You need to install the 'xwininfo' software"
+  exit 1
+fi
+
+if [[ $# -ne 1 || ! $1 =~ ^[0-9]+$ ]]; then
+  echo "usage: perfect-demo-recorder <time-in-secs>" >&2
+  exit 1
+fi
+
+D=$1
+
+echo -n "You should have another window ready to record. Click on it now..."
+
+XWININFO=$(xwininfo)
+read -r X < <(awk -F: '/Absolute upper-left X/{print $2}' <<< "$XWININFO")
+read -r Y < <(awk -F: '/Absolute upper-left Y/{print $2}' <<< "$XWININFO")
+read -r W < <(awk -F: '/Width/{print $2}' <<< "$XWININFO")
+read -r H < <(awk -F: '/Height/{print $2}' <<< "$XWININFO")
+
+echo
+echo
+echo "When you press enter, I'll count down from 5 here, and start recording."
+echo
+
+echo -n 'Ready? (press enter) '; read -r
+echo
+
+for n in {5..1}; do
+  echo -n "$n  "$'\r'
+  sleep 1
+done
+
+byzanz-record -c \
+  --verbose \
+  --delay=0 \
+  --duration="$D" \
+  --x="$X" --y="$Y" \
+  --width="$W" --height="$H" \
+  perfect-demo.gif
+
+echo
+echo "Recording saved to perfect-demo.gif"

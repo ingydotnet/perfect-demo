@@ -20,6 +20,8 @@ Fully Scripted Terminal Screencasts
 The `perfect-demo` command lets you create and run screencastable,
 terminal-based demos, with voice annotation... all from a simple text file.
 
+NOTE: Voice requires the `say` command, usually found on Mac OSX.
+
 = How to Make a Perfect Demo
 
 ...doc coming soon...
