@@ -1,5 +1,11 @@
 #! bash
 
-export PERFECT_DEMO_ROOT="$(cd -P $(dirname $BASH_SOURCE); pwd)"
+[[ -n ${ZSH_VERSION-} ]] &&
+  PERFECT_DEMO_ROOT="$0" ||
+  PERFECT_DEMO_ROOT="$BASH_SOURCE"
+[[ $PERFECT_DEMO_ROOT =~ ^/ ]] ||
+  PERFECT_DEMO_ROOT="$PWD/$PERFECT_DEMO_ROOT"
+
+export PERFECT_DEMO_ROOT="$(cd -P $(dirname $PERFECT_DEMO_ROOT); pwd)"
 export PATH="$PERFECT_DEMO_ROOT/bin:$PATH"
 export MANPATH="$PERFECT_DEMO_ROOT/man:$MANPATH"
